@@ -23,6 +23,10 @@ const cleanup = setupInfiniteScroll<User>({
   loadMoreThreshold: 300,
 });
 
+document
+  .querySelector("#infinite-scroll-container")
+  ?.addEventListener("infinite-scroll-loading", (e) => console.log(e.detail));
+
 window.addEventListener("beforeunload", () => {
   cleanup();
 });

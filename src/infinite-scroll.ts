@@ -14,15 +14,33 @@ export function setupInfiniteScroll<T>({
   containerSelector,
   itemGenerator,
   renderItem,
-  loadMoreThreshold = 200,
+  loadMoreThreshold = 50,
 }: InfiniteScrollConfig<T>): () => void {
   const container = document.querySelector(containerSelector);
   if (!container) throw new Error(`Container not found: ${containerSelector}`);
 
+  let isLoading = false;
+
   const loadMoreItems = async () => {
+    if (isLoading) return;
+    isLoading = true;
+
+    const eventLoading = new CustomEvent("infinite-scroll-loading", {
+      detail: { loading: true },
+    });
+    container.dispatchEvent(eventLoading);
+
     const { value, done } = await itemGenerator.next();
+
+    const eventLoadingEnded = new CustomEvent("infinite-scroll-loading", {
+      detail: { loading: false },
+    });
+
+    container.dispatchEvent(eventLoadingEnded);
+    isLoading = false;
+
     if (done) {
-      document.removeEventListener("scroll", checkScroll);
+      container.removeEventListener("scroll", checkScroll);
       return;
     }
     if (!value) return;
@@ -31,11 +49,13 @@ export function setupInfiniteScroll<T>({
       container.appendChild(el);
     });
   };
+
   const checkScroll = (): void => {
     const containerHeight = container.scrollHeight;
     const scrollPosition = container.scrollTop + container.clientHeight;
 
     if (containerHeight - scrollPosition < loadMoreThreshold) {
+      console.log(containerHeight - scrollPosition);
       loadMoreItems();
     }
   };
@@ -44,11 +64,11 @@ export function setupInfiniteScroll<T>({
   loadMoreItems();
 
   // Set up scroll event listener
-  document.addEventListener("scroll", checkScroll);
+  container.addEventListener("scroll", checkScroll);
 
   // Return a cleanup function
   return () => {
     console.log("cleaned");
-    document.removeEventListener("scroll", checkScroll);
+    container.removeEventListener("scroll", checkScroll);
   };
 }
