@@ -18,10 +18,10 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 600px;
-  justify-content: center;
+  height: 500px;
   align-items: center;
-  overflow-y: auto
+  overflow-y: auto;
+  min-width: 800px;
 }
 
 .user-item {
@@ -30,8 +30,8 @@
   align-items: center;
   font-size: 2em;
   font-weight: bold;
-  width: 300px;
-  height: 400px;
+  width: 200px;
+  min-height: 200px;
   padding : 1em;
   border-radius : 1em;
   border : 1px solid #ccc;
@@ -92,6 +92,17 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.loader--wrapper {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+}
+
 .loader {
   --color: white;
   --size-mid: 6vmin;
@@ -99,7 +110,6 @@ button:focus-visible {
   --size-bar: 0.4vmin;
   --size-square: 3vmin;
 
-  display: block;
   position: relative;
   width: 50%;
   display: grid;

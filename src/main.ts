@@ -1,6 +1,7 @@
 import "./style.css";
 import { fetchAllRecords, User } from "./data-service.ts";
 import { setupInfiniteScroll } from "./infinite-scroll.ts";
+import { toggleLoader } from "./toggle-loader.ts";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
@@ -28,9 +29,10 @@ const cleanup = setupInfiniteScroll<User>({
 // here we could show/hide a loader
 document
   .querySelector("#infinite-scroll-container")
-  ?.addEventListener("infinite-scroll-loading", (e) =>
-    console.log((<CustomEvent>e).detail),
-  );
+  ?.addEventListener("infinite-scroll-loading", (e) => {
+    console.log((<CustomEvent>e).detail);
+    toggleLoader((<CustomEvent>e).detail?.loading);
+  });
 
 window.addEventListener("beforeunload", () => {
   cleanup();
