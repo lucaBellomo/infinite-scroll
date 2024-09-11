@@ -9,6 +9,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
+// a function that takes a user and renders a div
 function renderItem(user: User): HTMLDivElement {
   const div = document.createElement("div");
   div.classList.add("user-item");
@@ -16,16 +17,20 @@ function renderItem(user: User): HTMLDivElement {
   return div;
 }
 
+// the setup of infinite scroll
 const cleanup = setupInfiniteScroll<User>({
   containerSelector: "#infinite-scroll-container",
   itemGenerator: fetchAllRecords(),
   renderItem: renderItem,
-  loadMoreThreshold: 300,
+  loadMoreThreshold: 50,
 });
 
+// here we could show/hide a loader
 document
   .querySelector("#infinite-scroll-container")
-  ?.addEventListener("infinite-scroll-loading", (e) => console.log(e.detail));
+  ?.addEventListener("infinite-scroll-loading", (e) =>
+    console.log((<CustomEvent>e).detail),
+  );
 
 window.addEventListener("beforeunload", () => {
   cleanup();

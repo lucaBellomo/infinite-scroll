@@ -7,7 +7,7 @@ export interface InfiniteScrollConfig<T> {
 
 /**
  * Creates a generic infinite scroll setup
- * @param config -    Configuration object for the infinite scroll
+ * @param {InfiniteScrollConfig} config - Configuration object for the infinite scroll
  * @returns A cleanup function to remove the scroll event listener
  */
 export function setupInfiniteScroll<T>({
@@ -55,7 +55,6 @@ export function setupInfiniteScroll<T>({
     const scrollPosition = container.scrollTop + container.clientHeight;
 
     if (containerHeight - scrollPosition < loadMoreThreshold) {
-      console.log(containerHeight - scrollPosition);
       loadMoreItems();
     }
   };
@@ -68,7 +67,6 @@ export function setupInfiniteScroll<T>({
 
   // Return a cleanup function
   return () => {
-    console.log("cleaned");
     container.removeEventListener("scroll", checkScroll);
   };
 }
